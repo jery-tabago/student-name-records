@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Campus Enrollment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#eef3f1;--card:#fff;--ink:#10282e;--mute:#5a6e72;--line:#cfdad7;--brand:#0f5c63;--brand-ink:#fff;--accent:#f2b705;--err:#b3261e;--sel:#e3f1ee;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a1d;--card:#142428;--ink:#e8f1ef;--mute:#9bb0b3;--line:#27403f;--brand:#46b3b8;--brand-ink:#06191b;--accent:#f2b705;--err:#ff8a80;--sel:#1b3a3b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1a1d;--card:#142428;--ink:#e8f1ef;--mute:#9bb0b3;--line:#27403f;--brand:#46b3b8;--brand-ink:#06191b;--err:#ff8a80;--sel:#1b3a3b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+,::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.9rem;line-height:1.15;margin:0 0 4px;font-weight:800;letter-spacing:-.02em}
+.sub{color:var(--mute);margin:0 0 20px}
+.steps{display:flex;gap:6px;margin:0 0 20px;padding:0;list-style:none}
+.steps li{flex:1;font-size:.78rem;color:var(--mute);border-top:4px solid var(--line);padding-top:6px}
+.steps li.done{border-color:var(--brand);color:var(--ink)}
+.steps li.now{border-color:var(--accent);color:var(--ink);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:10px;margin-bottom:18px}
+.tabs button{flex:1;border:0;background:none;color:var(--mute);padding:9px;border-radius:7px;font:inherit;font-weight:600;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+label{display:block;font-weight:600;margin:14px 0 6px}
+input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+input:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.err{color:var(--err);min-height:1.4em;margin:10px 0 0;font-size:.92rem}
+.btn{display:block;width:100%;margin-top:16px;padding:12px;border:0;border-radius:8px;background:var(--brand);color:var(--brand-ink);font:inherit;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.link{background:none;border:0;color:var(--mute);font:inherit;cursor:pointer;text-decoration:underline;margin-top:12px;padding:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{text-align:left;padding:14px 12px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.opt b{display:block;font-size:1.05rem}
+.opt span{font-size:.8rem;color:var(--mute)}
+.opt[aria-pressed=true]{border-color:var(--brand);background:var(--sel)}
+.pick{margin:0 0 8px;font-weight:600}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.grid4 .opt{text-align:center;padding:12px 4px;font-weight:700}
+.ok{text-align:center}
+.ok .big{font-size:2.4rem}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;text-align:left;background:var(--bg);padding:14px;border-radius:10px;margin:14px 0}
+dt{color:var(--mute)}dd{margin:0;font-weight:600}
+:root{--ok:#1f9d55}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ok:#4cd88a}}
+:root[data-theme="dark"]{--ok:#4cd88a}
+.names{display:grid;gap:8px;margin-top:12px;max-height:340px;overflow-y:auto}
+.opt.add{border-style:dashed;color:var(--brand);font-weight:700}
+.who{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px}
+.mrow{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+select{flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.dow,.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow{text-align:center;font-size:.75rem;color:var(--mute);margin-bottom:4px}
+.day{aspect-ratio:1;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0}
+.day small{font-size:.7rem;color:var(--mute)}
+.day i{font-style:normal;font-weight:800;font-size:1.15rem;line-height:1}
+.day.we{background:var(--bg)}
+.day.p{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card));color:var(--ok)}
+.day.a{border-color:var(--err);background:color-mix(in srgb,var(--err) 16%,var(--card));color:var(--err)}
+.legend{font-size:.85rem;color:var(--mute)}
+.gp{color:var(--ok)}.ra{color:var(--err)}
+.stat{font-weight:600}
+.gr{display:grid;grid-template-columns:1fr 62px 76px 32px;gap:6px;margin-bottom:8px}
+.gr input{padding:9px 8px}
+.x{border:0;background:none;color:var(--err);font-size:1.3rem;cursor:pointer}
+.gwa{margin-top:14px;padding:16px;border-radius:10px;background:var(--sel);text-align:center}
+.gwa b{display:block;font-size:2.4rem;line-height:1.1}
+@media (max-width:420px){.grid{grid-template-columns:1fr}.steps li{font-size:.62rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Campus Enrollment</h1>
+  <p class="sub" id="sub">Create an account to begin.</p>
+  <ol class="steps" id="steps"></ol>
+  <div class="card" id="view"></div>
+</div>
+<script>
+var COURSES=[["BSIT","Information Technology"],["BSEd","Education"],["BSCrim","Criminology"],["BSA","Agriculture"],["BSN","Nursing"],["BSBA","Business Administration"],["BSCE","Civil Engineering"],["BSHM","Hospitality Management"],["BSPsy","Psychology"],["BSFi","Fisheries"]];
+var STEP_NAMES=["Account","Welcome","Course","Section","Student","Records"];
+var NAMES=["Juan Dela Cruz","Maria Santos","Jose Reyes","Ana Garcia","Pedro Ramos","Liza Mendoza","Carlo Bautista","Grace Aquino","Mark Villanueva","Joy Castillo","Ryan Torres","Kim Navarro","Paolo Flores","Angel Rivera","Jerome Lopez","Mika Domingo","Nico Pascual","Bea Cruz","Leo Soriano","Faith Morales","Dennis Gonzales","Rose Hernandez","Eric Valdez","Jane Salazar"];
+var MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var S={step:1,mode:"create",err:"",user:null,course:null,year:null,section:null,student:null,tab:"att",month:new Date().getMonth(),q:""};
+var view=document.getElementById("view");
+
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var mem={users:{}};
+function users(){return load("enroll_users",mem.users)}
+function saveUsers(u){mem.users=u;save("enroll_users",u)}
+async function hash(t){try{var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")}catch(e){return btoa(t)}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function renderSteps(){
+  document.getElementById("steps").innerHTML=STEP_NAMES.map(function(n,i){
+    var c=i+1<S.step?"done":i+1===S.step?"now":"";
+    return '<li class="'+c+'">'+(i+1)+". "+n+"</li>"});
+}
+
+function render(){
+  view.onkeydown=null;
+  renderSteps();
+  var sub=document.getElementById("sub");
+  if(S.step===1){
+    sub.textContent=S.mode==="create"?"Create an account to begin.":"Sign in to continue.";
+    var c=S.mode==="create";
+    view.innerHTML='<div class="tabs" role="tablist"><button role="tab" aria-selected="'+c+'" data-m="create">Create account</button><button role="tab" aria-selected="'+!c+'" data-m="signin">Sign in</button></div>'+
+    '<label for="u">Gmail or username</label><input id="u" autocomplete="username" placeholder="juan@gmail.com or juan.delacruz">'+
+    '<label for="p">Password</label><input id="p" type="password" autocomplete="'+(c?"new-password":"current-password")+'" placeholder="At least 6 characters">'+
+    (c?'<label for="p2">Confirm password</label><input id="p2" type="password" autocomplete="new-password">':"")+
+    '<p class="err" id="err" role="alert">'+esc(S.err)+'</p>'+
+    '<button class="btn" id="go">'+(c?"Create account":"Sign in")+'</button>';
+    view.querySelectorAll("[data-m]").forEach(function(b){b.onclick=function(){S.mode=b.dataset.m;S.err="";render()}});
+    document.getElementById("go").onclick=submitAuth;
+    view.onkeydown=function(e){if(e.key==="Enter")submitAuth()};
+  }else if(S.step===2){
+    sub.textContent="Your account is ready.";
+    view.innerHTML='<div class="ok"><div class="big">&#9989;</div><h2 style="margin:6px 0">Welcome, '+esc(S.user)+'</h2><p class="sub">You are signed in. Next, choose the course you belong to.</p><button class="btn" id="next">Choose course</button><button class="link" id="out">Not you? Sign out</button></div>';
+    document.getElementById("next").onclick=function(){S.step=3;render()};
+    document.getElementById("out").onclick=function(){S.user=null;S.step=1;S.mode="signin";render()};
+  }else if(S.step===3){
+    sub.textContent="Which course or program do you belong to?";
+    view.innerHTML='<div class="grid">'+COURSES.map(function(c){return '<button class="opt" data-c="'+c[0]+'" aria-pressed="'+(S.course===c[0])+'"><b>'+c[0]+'</b><span>'+c[1]+'</span></button>'}).join("")+'</div>'+
+    '<button class="btn" id="next" '+(S.course?"":"disabled")+'>Continue</button><button class="link" id="back">Back</button>';
+    view.querySelectorAll("[data-c]").forEach(function(b){b.onclick=function(){S.course=b.dataset.c;render()}});
+    document.getElementById("next").onclick=function(){S.step=4;render()};
+    document.getElementById("back").onclick=function(){S.step=2;render()};
+  }else if(S.step===4){
+    sub.textContent="Choose your year level and section.";
+    view.innerHTML='<p class="pick">Year level</p><div class="grid4">'+[1,2,3,4].map(function(y){return '<button class="opt" data-y="'+y+'" aria-pressed="'+(S.year===y)+'">Year '+y+'</button>'}).join("")+'</div>'+
+    '<p class="pick">Section</p><div class="grid4">'+["A","B","C","D"].map(function(s){return '<button class="opt" data-s="'+s+'" aria-pressed="'+(S.section===s)+'">'+s+'</button>'}).join("")+'</div>'+
+    '<button class="btn" id="next" '+(S.year&&S.section?"":"disabled")+'>Join section</button><button class="link" id="back">Back</button>';
+    view.querySelectorAll("[data-y]").forEach(function(b){b.onclick=function(){S.year=+b.dataset.y;render()}});
+    view.querySelectorAll("[data-s]").forEach(function(b){b.onclick=function(){S.section=b.dataset.s;render()}});
+    document.getElementById("next").onclick=finish;
+    document.getElementById("back").onclick=function(){S.step=3;render()};
+  }else if(S.step===5){                 // STEP 5: student name
+    sub.textContent="Search and click your name.";
+    view.innerHTML='<p class="pick">'+esc(S.course)+' '+S.year+'-'+S.section+'</p><input id="q" placeholder="Type a name to search or add" value="'+esc(S.q)+'" autocomplete="off" aria-label="Student name"><div id="names" class="names"></div><button class="link" id="back">Back</button>';
+    var qi=document.getElementById("q");qi.oninput=function(){S.q=qi.value;drawNames()};drawNames();
+    document.getElementById("back").onclick=function(){S.step=4;render()};
+  }else if(S.step===6){                 // STEP 6: attendance + GWA
+    sub.textContent="Track attendance and compute your GWA.";
+    view.innerHTML='<div class="who"><div><b>'+esc(S.student)+'</b><br><span class="sub" style="margin:0">'+esc(S.course)+' '+S.year+'-'+S.section+'</span></div><button class="link" id="chg">Change student</button></div><div class="tabs"><button data-t="att" aria-selected="'+(S.tab==="att")+'">Attendance</button><button data-t="gwa" aria-selected="'+(S.tab==="gwa")+'">GWA calculator</button></div><div id="tool"></div>';
+    view.querySelectorAll("[data-t]").forEach(function(b){b.onclick=function(){S.tab=b.dataset.t;render()}});
+    document.getElementById("chg").onclick=function(){S.step=5;render()};
+    if(S.tab==="att")drawAtt();else drawGwa();
+  }else{
+    sub.textContent="You are all set.";
+    var name=(COURSES.filter(function(c){return c[0]===S.course})[0]||[])[1];
+    view.innerHTML='<div class="ok"><div class="big">&#127881;</div><h2 style="margin:6px 0">You joined '+esc(S.course)+' '+S.year+'-'+S.section+'</h2><dl><dt>Account</dt><dd>'+esc(S.user)+'</dd><dt>Course</dt><dd>'+esc(S.course)+' &ndash; '+esc(name)+'</dd><dt>Year</dt><dd>Year '+S.year+'</dd><dt>Section</dt><dd>Section '+S.section+'</dd></dl><button class="btn" id="chg">Change my choices</button><button class="link" id="out">Sign out</button></div>';
+    document.getElementById("chg").onclick=function(){S.step=3;render()};
+    document.getElementById("out").onclick=function(){S={step:1,mode:"signin",err:"",user:null,course:null,year:null,section:null};render()};
+  }
+}
+
+async function submitAuth(){
+  var u=document.getElementById("u").value.trim().toLowerCase();
+  var p=document.getElementById("p").value;
+  var all=users();
+  var email=u.indexOf("@")>-1;
+  if(!u){return fail("Enter your Gmail or username.")}
+  if(email&&!/^[^\s@]+@gmail\.com$/.test(u)){return fail("Use a Gmail address ending in @gmail.com, or enter a username without @.")}
+  if(p.length<6){return fail("Password must be at least 6 characters.")}
+  var h=await hash(p);
+  if(S.mode==="create"){
+    if(p!==document.getElementById("p2").value){return fail("Passwords do not match.")}
+    if(all[u]){return fail("That account already exists. Use Sign in instead.")}
+    all[u]={h:h};saveUsers(all);
+  }else{
+    if(!all[u]||all[u].h!==h){return fail("Wrong username or password. Check them, or create an account.")}
+    var d=all[u];if(d.course){S.course=d.course;S.year=d.year;S.section=d.section}
+  }
+  S.user=u;S.err="";S.step=2;render();
+}
+function fail(m){S.err=m;document.getElementById("err").textContent=m;return false}
+function finish(){
+  var all=users();
+  if(all[S.user]){all[S.user].course=S.course;all[S.user].year=S.year;all[S.user].section=S.section;saveUsers(all)}
+  S.step=5;render();
+}
+function get(k){return load(k,mem[k]||{})}
+function put(k,v){mem[k]=v;save(k,v)}
+function skey(){return S.user+"|"+S.course+S.year+S.section+"|"+S.student}
+
+function roster(){
+  var k=S.course+S.year+S.section,e=get("enroll_extra")[k]||[],h=0,p=NAMES.slice(),o=[];
+  for(var i=0;i<k.length;i++)h=(h*31+k.charCodeAt(i))>>>0;
+  for(var j=0;j<10;j++)o.push(p.splice((h+j*7)%p.length,1)[0]);
+  return o.concat(e).sort();
+}
+function drawNames(){
+  var q=S.q.trim().toLowerCase(),b=document.getElementById("names");
+  var r=roster().filter(function(n){return n.toLowerCase().indexOf(q)>-1});
+  var h=r.map(function(n){return '<button class="opt" data-n="'+esc(n)+'">'+esc(n)+'</button>'}).join("");
+  if(q&&!roster().some(function(n){return n.toLowerCase()===q}))h+='<button class="opt add" data-add="1">+ Add “'+esc(S.q.trim())+'”</button>';
+  b.innerHTML=h||'<p class="sub">No names yet. Type a name to add it.</p>';
+  b.querySelectorAll("[data-n]").forEach(function(x){x.onclick=function(){S.student=x.dataset.n;S.step=6;render()}});
+  var a=b.querySelector("[data-add]");
+  if(a)a.onclick=function(){var k=S.course+S.year+S.section,e=get("enroll_extra");(e[k]=e[k]||[]).push(S.q.trim());put("enroll_extra",e);S.student=S.q.trim();S.q="";S.step=6;render()};
+}
+
+function drawAtt(){
+  var Y=new Date().getFullYear(),m=S.month,n=new Date(Y,m+1,0).getDate(),first=new Date(Y,m,1).getDay();
+  var all=get("enroll_att"),rec=all[skey()]||{},p=0,a=0,c="";
+  for(var i=0;i<first;i++)c+='<span></span>';
+  for(var d=1;d<=n;d++){
+    var key=Y+"-"+m+"-"+d,v=rec[key],w=new Date(Y,m,d).getDay();
+    if(v==="p")p++;if(v==="a")a++;
+    c+='<button class="day '+(v||"")+(w%6===0?" we":"")+'" data-d="'+key+'" aria-label="'+MO[m]+' '+d+(v==="p"?", present":v==="a"?", absent":", not marked")+'"><small>'+d+'</small><i>'+(v==="p"?"&#10003;":v==="a"?"&#10007;":"")+'</i></button>';
+  }
+  var t=document.getElementById("tool");
+  t.innerHTML='<div class="mrow"><select id="mo" aria-label="Month">'+MO.map(function(x,i){return '<option value="'+i+'"'+(i===m?" selected":"")+'>'+x+'</option>'}).join("")+'</select><b>'+Y+'</b></div><div class="dow">'+["Su","Mo","Tu","We","Th","Fr","Sa"].map(function(x){return '<span>'+x+'</span>'}).join("")+'</div><div class="cal">'+c+'</div><p class="legend"><b class="gp">&#10003;</b> Present (tap once). <b class="ra">&#10007;</b> Absent (tap twice). Tap a third time to clear.</p><p class="stat">Present: '+p+' &nbsp; Absent: '+a+' &nbsp; Rate: '+(p+a?Math.round(p/(p+a)*100):0)+'%</p>';
+  document.getElementById("mo").onchange=function(){S.month=+this.value;drawAtt()};
+  t.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){
+    var k=b.dataset.d,cur=rec[k];
+    if(!cur)rec[k]="p";else if(cur==="p")rec[k]="a";else delete rec[k];
+    all[skey()]=rec;put("enroll_att",all);drawAtt();
+  }});
+}
+
+function drawGwa(){
+  var all=get("enroll_gwa"),rows=all[skey()]||[{s:"",u:3,g:""},{s:"",u:3,g:""},{s:"",u:3,g:""}];
+  var t=document.getElementById("tool");
+  t.innerHTML='<p class="sub" style="margin-bottom:8px">Enter units and grades. 1.00 is highest and 5.00 is failed.</p><div id="rows"></div><button class="link" id="addr">+ Add subject</button><div class="gwa" id="res"></div>';
+  var rd=document.getElementById("rows");
+  function calc(){
+    var U=0,W=0;
+    rows.forEach(function(r){var u=parseFloat(r.u),g=parseFloat(r.g);if(u>0&&g>=1&&g<=5){U+=u;W+=u*g}});
+    all[skey()]=rows;put("enroll_gwa",all);
+    var res=document.getElementById("res");
+    if(!U){res.innerHTML='<span>GWA</span><b>--</b><span>Add a grade to see your result.</span>';return}
+    var g=W/U,rm=g<=1.25?"Excellent":g<=1.75?"Very good":g<=2.5?"Good":g<=3?"Passing":"Failed";
+    res.innerHTML='<span>GWA ('+U+' units)</span><b>'+g.toFixed(2)+'</b><span>'+rm+'</span>';
+  }
+  function paint(){
+    rd.innerHTML=rows.map(function(r,i){return '<div class="gr"><input data-i="'+i+'" data-f="s" placeholder="Subject" value="'+esc(r.s)+'" aria-label="Subject"><input data-i="'+i+'" data-f="u" type="number" min="0.5" step="0.5" value="'+esc(r.u)+'" aria-label="Units"><input data-i="'+i+'" data-f="g" type="number" min="1" max="5" step="0.25" placeholder="Grade" value="'+esc(r.g)+'" aria-label="Grade"><button class="x" data-r="'+i+'" aria-label="Remove subject">&times;</button></div>'}).join("");
+    rd.querySelectorAll("input").forEach(function(el){el.oninput=function(){rows[+el.dataset.i][el.dataset.f]=el.value;calc()}});
+    rd.querySelectorAll("[data-r]").forEach(function(b){b.onclick=function(){rows.splice(+b.dataset.r,1);paint();calc()}});
+  }
+  document.getElementById("addr").onclick=function(){rows.push({s:"",u:3,g:""});paint();calc()};
+  paint();calc();
+}
+
+render();
+</script>
+</body>
+</html>
